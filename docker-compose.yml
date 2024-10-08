@@ -1,0 +1,8 @@
+services:
+  barracuda-camera:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: barracuda-camera
+    volumes:
+      - $HOME/.ssh:$HOME/.ssh
