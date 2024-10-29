@@ -4,5 +4,18 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: barracuda-camera
+    privileged: true
+    tty: true
+    network_mode: host
     volumes:
-      - $HOME/.ssh:$HOME/.ssh
+      - $HOME/.ssh:/root/.ssh
+      - $XAUTHORITY:/root/.Xauthority:ro
+    environment:
+      - DISPLAY
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
