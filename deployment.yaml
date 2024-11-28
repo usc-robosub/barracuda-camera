@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: barracuda-camera-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: barracuda-camera
+  template:
+    metadata:
+      labels:
+        app: barracuda-camera
+    spec:
+      containers:
+        - name: barracuda-camera
+          image: ghcr.io/usc-robosub/barracuda-camera:nightly
+          tty: true
+          volumeMounts:
+            - name: ssh-volume
+              mountPath: /root/.ssh
+            - name: xauthority-volume
+              mountPath: /root/.Xauthority
+              readOnly: true
+          env:
+            - name: DISPLAY
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+      imagePullSecrets:
+        - name: ghcr-secret
+      volumes:
+        - name: ssh-volume
+          hostPath:
+            path: /root/.ssh
+            type: Directory
+        - name: xauthority-volume
+          hostPath:
+            path: /root/.Xauthority
+            type: File
