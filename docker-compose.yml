@@ -9,7 +9,9 @@ services:
     network_mode: host
     volumes:
       - $HOME/.ssh:/root/.ssh
-      - $XAUTHORITY:/root/.Xauthority:ro
+      # Currently, ZED SDK on Jetpack 5.1.2 uses CUDA 11.4
+      # Newer versions may require CUDA 12
+      - $CUDA_11_HOME:/usr/local/cuda:ro
     environment:
       - DISPLAY
     deploy:
