@@ -1,6 +1,12 @@
-FROM ros:noetic-ros-base-focal
+FROM stereolabs/zed:4.2-runtime-jetson-jp5.1.2 
 
 RUN sudo apt-get update \
+    && sudo apt-get install -y --no-install-recommends curl \
+    # Install ROS
+    && echo "deb http://packages.ros.org/ros/ubuntu focal main" > /etc/apt/sources.list.d/ros1-latest.list \
+    && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add - \
+    && sudo apt update \
+    && sudo apt-get install -y --no-install-recommends ros-noetic-ros-base \
     # Install dependencies for building ROS packages
     && sudo apt-get install -y --no-install-recommends git vim wget zstd \
         ros-noetic-robot-state-publisher \
@@ -11,18 +17,6 @@ RUN sudo apt-get update \
         ros-noetic-xacro \
         ros-noetic-urdf \
         ros-noetic-image-transport-plugins \
-    # Install ZED SDK 4.2
-    && if [ $(uname -m) = "x86_64" ]; then \
-            wget -qO ZED_SDK.zstd.run https://download.stereolabs.com/zedsdk/4.2/cu12/ubuntu20; \
-        else \
-            # Jetson needs to use a different ZED SDK version
-            # This may need to be changed based on the Jetpack version
-            wget -qO ZED_SDK.zstd.run https://download.stereolabs.com/zedsdk/4.2/l4t35.4/jetsons; \
-        fi \
-    && chmod +x ZED_SDK.zstd.run \
-    # Skip checking for CUDA because CUDA libraries are mounted to the container
-    && ./ZED_SDK.zstd.run -- silent runtime_only skip_cuda \
-    && rm ZED_SDK.zstd.run \
     && rm -rf /var/lib/apt/lists/*
 
 COPY . /opt/barracuda-camera

@@ -7,17 +7,8 @@ services:
     privileged: true
     tty: true
     network_mode: host
+    runtime: nvidia
     volumes:
       - $HOME/.ssh:/root/.ssh
-      # Currently, ZED SDK on Jetpack 5.1.2 uses CUDA 11.4
-      # Newer versions may require CUDA 12
-      - $CUDA_11_HOME:/usr/local/cuda:ro
     environment:
       - DISPLAY
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
