@@ -24,5 +24,10 @@ COPY . /opt/barracuda-camera
 # Set working directory
 WORKDIR /opt
 
+# Build ROS packages
+RUN . /opt/ros/noetic/setup.sh \
+    && cd /opt/barracuda-camera/catkin_ws \
+    && catkin_make
+
 # Source the workspace on container start
 CMD ["/bin/bash", "/opt/barracuda-camera/entrypoint.sh"]
