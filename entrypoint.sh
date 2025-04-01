@@ -1,11 +1,13 @@
 #!/usr/bin/bash
 source /opt/ros/noetic/setup.bash
 
-# Build catkin_ws
+# Source catkin_ws
 cd barracuda-camera/catkin_ws
-catkin_make
 source devel/setup.bash
 
-# Start interactive shell session in /opt/barracuda-camera directory
-cd ..
-exec /bin/bash
+# Source ros and catkin_ws in bashrc
+echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+echo "source /opt/barracuda-description/catkin_ws/devel/setup.bash" >> ~/.bashrc
+
+# Start camera node
+roslaunch barracuda_camera barracuda_camera.launch

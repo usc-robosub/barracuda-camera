@@ -7,15 +7,8 @@ services:
     privileged: true
     tty: true
     network_mode: host
+    runtime: nvidia
     volumes:
       - $HOME/.ssh:/root/.ssh
-      - $XAUTHORITY:/root/.Xauthority:ro
     environment:
       - DISPLAY
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
