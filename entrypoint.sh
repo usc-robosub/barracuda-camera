@@ -10,4 +10,4 @@ echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 echo "source /opt/barracuda-description/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
 # Start camera node
-roslaunch barracuda_camera barracuda_camera.launch
+roslaunch barracuda_camera barracuda_camera.launch --wait
