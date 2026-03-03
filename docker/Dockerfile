@@ -28,7 +28,7 @@ RUN apt-get update \
 
 RUN apt-get update \
     && rosdep update --rosdistro humble \
-    && rosdep install --from-paths src --ignore-src -y \
+    && rosdep install --from-paths src --ignore-src -y --rosdistro $ROS_DISTRO \
     && rm -rf /var/lib/apt/lists/*
 
 RUN /bin/bash -c "source /opt/ros/humble/setup.bash && colcon build --symlink-install"
