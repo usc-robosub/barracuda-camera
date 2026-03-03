@@ -1,0 +1,31 @@
+services:
+  barracuda-camera:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: barracuda-camera
+    container_name: barracuda-camera
+    user: root
+    privileged: true
+    tty: true
+    network_mode: host
+    ipc: host
+    volumes:
+      - ${HOME}/.ssh:/root/.ssh
+  barracuda-camera-dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    user: root
+    privileged: true
+    image: barracuda-camera-dev
+    container_name: barracuda-camera-dev
+    tty: true
+    network_mode: host
+    ipc: host
+    volumes:
+      - ${HOME}/.ssh:/root/.ssh
+      - ${HOME}/.gitconfig:/root/.gitconfig
+      - ${HOME}/.vimrc:/root/.vimrc
+      - ../barracuda_camera:/ros2_ws/src/barracuda_camera
+    profiles: ["dev"]
