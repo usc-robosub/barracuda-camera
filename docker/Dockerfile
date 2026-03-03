@@ -5,7 +5,7 @@ ENV ROS_DISTRO=humble
 
 WORKDIR /ros2_ws
 
-# COPY barracuda_control /ros2_ws/src/barracuda_control
+COPY barracuda_control /ros2_ws/src/barracuda_control
 COPY zed-ros2-wrapper /ros2_ws/src/zed-ros2-wrapper
 
 COPY docker/entrypoint.sh /entrypoint.sh

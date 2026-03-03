@@ -5,6 +5,7 @@ services:
       dockerfile: docker/Dockerfile
     image: barracuda-camera
     container_name: barracuda-camera
+    runtime: nvidia
     user: root
     privileged: true
     tty: true
@@ -17,6 +18,7 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     user: root
+    runtime: nvidia
     privileged: true
     image: barracuda-camera-dev
     container_name: barracuda-camera-dev
@@ -27,5 +29,5 @@ services:
       - ${HOME}/.ssh:/root/.ssh
       - ${HOME}/.gitconfig:/root/.gitconfig
       - ${HOME}/.vimrc:/root/.vimrc
-      # - ../barracuda_camera:/ros2_ws/src/barracuda_camera
+      - ../barracuda_camera:/ros2_ws/src/barracuda_camera
     profiles: ["dev"]
