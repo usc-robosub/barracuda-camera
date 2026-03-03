@@ -14,8 +14,6 @@ install(DIRECTORY
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(ament_index_python REQUIRED)
-find_package(launch REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
