@@ -27,5 +27,5 @@ services:
       - ${HOME}/.ssh:/root/.ssh
       - ${HOME}/.gitconfig:/root/.gitconfig
       - ${HOME}/.vimrc:/root/.vimrc
-      - ../barracuda_camera:/ros2_ws/src/barracuda_camera
+      # - ../barracuda_camera:/ros2_ws/src/barracuda_camera
     profiles: ["dev"]
