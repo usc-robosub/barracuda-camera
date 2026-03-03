@@ -1,5 +1,8 @@
 FROM stereolabs/zed:5.2-devel-jetson-jp6.1.0
 
+ENV DEBIAN_FRONTEND=noninteractive
+ENV ROS_DISTRO=humble
+
 WORKDIR /ros2_ws
 
 # COPY barracuda_control /ros2_ws/src/barracuda_control
