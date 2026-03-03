@@ -13,6 +13,13 @@ services:
     ipc: host
     volumes:
       - ${HOME}/.ssh:/root/.ssh
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu, compute, video, utility]
   barracuda-camera-dev:
     build:
       context: ..
@@ -30,4 +37,11 @@ services:
       - ${HOME}/.gitconfig:/root/.gitconfig
       - ${HOME}/.vimrc:/root/.vimrc
       - ../barracuda_camera:/ros2_ws/src/barracuda_camera
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu, compute, video, utility]
     profiles: ["dev"]
