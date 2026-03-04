@@ -13,6 +13,11 @@ services:
     ipc: host
     volumes:
       - ${HOME}/.ssh:/root/.ssh
+      - /tmp:/tmp
+      - /var/run/nvargus-daemon/socket:/var/run/nvargus-daemon/socket
+      - /dev/nvhost-ctrl:/dev/nvhost-ctrl
+      - /dev/nvhost-ctrl-gpu:/dev/nvhost-ctrl-gpu
+      - /dev/nvhost-gpu:/dev/nvhost-gpu
     deploy:
       resources:
         reservations:
@@ -37,6 +42,11 @@ services:
       - ${HOME}/.gitconfig:/root/.gitconfig
       - ${HOME}/.vimrc:/root/.vimrc
       - ../barracuda_camera:/ros2_ws/src/barracuda_camera
+      - /tmp:/tmp
+      - /var/run/nvargus-daemon/socket:/var/run/nvargus-daemon/socket
+      - /dev/nvhost-ctrl:/dev/nvhost-ctrl
+      - /dev/nvhost-ctrl-gpu:/dev/nvhost-ctrl-gpu
+      - /dev/nvhost-gpu:/dev/nvhost-gpu
     deploy:
       resources:
         reservations:
