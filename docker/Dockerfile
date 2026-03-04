@@ -31,7 +31,7 @@ RUN apt-get update \
     && rosdep install --from-paths src --ignore-src -y --rosdistro $ROS_DISTRO \
     && rm -rf /var/lib/apt/lists/*
 
-# RUN /bin/bash -c "source /opt/ros/humble/setup.bash && colcon build --symlink-install"
+RUN /bin/bash -c "source /opt/ros/humble/setup.bash && colcon build --symlink-install --packages-ignore zed_debug"
 
 RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc && \
     echo "source /ros2_ws/install/setup.bash" >> ~/.bashrc \
