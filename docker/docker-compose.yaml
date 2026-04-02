@@ -1,18 +1,49 @@
+###########################################################################
+# docker compose services: host, host-no-launch, bridge, bridge-no-launch #
+###########################################################################
+
+# the services are first split up by network mode, then by launch behavior:
+
+# when running a container on the jetson, we use the host networking mode
+# so other devices (e.g. sensors, land computer running foxglove) can access
+# the container via their network connection to the jetson
+
+# when running a container on a machine where we want another program on the
+# same machine to be able to connect to the container over the network (a use
+# case for this would be connecting foxglove running locally to
+# a container also running locally), we use the bridge networking mode
+
+# the host and bridge services will spin up a container that automatically
+# launches camera.launch.py
+
+# the x-no-launch services will not launch anything upon spinning up the container -
+# these services set the NO_LAUNCH environment var, which entrypoint.sh checks to
+# determine the launch behavior (when it's set the ros2 launch call gets skipped)
+
+# use `docker compose up` for the default `host` service
+# use `docker compose up <service-name>` to launch one of the alternate services
 services:
-  barracuda-camera:
+  host:
     build:
       context: ..
       dockerfile: docker/Dockerfile
+      args:
+        HOST_UID: ${HOST_UID:-1000}
+        HOST_GID: ${HOST_GID:-1000}
+    environment:
+      DISPLAY: ${DISPLAY}
+      # Avoid Fast DDS shared-memory permission issues when the container
+      # runs as root to access Jetson camera/GPU device nodes.
+      FASTDDS_BUILTIN_TRANSPORTS: UDPv4
+      ROS_DOMAIN_ID: "0"
+    privileged: true
     image: barracuda-camera
-    container_name: barracuda-camera
-    runtime: nvidia
-    user: root
-    privileged: true
     tty: true
     network_mode: host
     ipc: host
+    runtime: nvidia
+    shm_size: 1gb
     volumes:
-      - ${HOME}/.ssh:/root/.ssh
       - /tmp:/tmp
       - /var/run/nvargus-daemon/socket:/var/run/nvargus-daemon/socket
       - /dev/nvhost-ctrl:/dev/nvhost-ctrl
@@ -25,33 +56,26 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu, compute, video, utility]
-  barracuda-camera-dev:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
-    user: root
-    runtime: nvidia
-    privileged: true
-    image: barracuda-camera-dev
-    container_name: barracuda-camera-dev
-    tty: true
-    network_mode: host
-    ipc: host
-    volumes:
-      - ${HOME}/.ssh:/root/.ssh
-      - ${HOME}/.gitconfig:/root/.gitconfig
-      - ${HOME}/.vimrc:/root/.vimrc
-      - ../barracuda_camera:/ros2_ws/src/barracuda_camera
-      - /tmp:/tmp
-      - /var/run/nvargus-daemon/socket:/var/run/nvargus-daemon/socket
-      - /dev/nvhost-ctrl:/dev/nvhost-ctrl
-      - /dev/nvhost-ctrl-gpu:/dev/nvhost-ctrl-gpu
-      - /dev/nvhost-gpu:/dev/nvhost-gpu
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu, compute, video, utility]
-    profiles: ["dev"]
+
+  host-no-launch:
+    extends: host
+    environment:
+      DISPLAY: ${DISPLAY}
+      NO_LAUNCH: "true"
+      ROS_DOMAIN_ID: "0"
+    profiles: ["host-no-launch"]
+
+  bridge:
+    extends: host
+    network_mode: bridge
+    ports:
+      - 8765:8765
+    profiles: ["bridge"]
+
+  bridge-no-launch:
+    extends: bridge
+    environment:
+      DISPLAY: ${DISPLAY}
+      NO_LAUNCH: "true"
+      ROS_DOMAIN_ID: "0"
+    profiles: ["bridge-no-launch"]

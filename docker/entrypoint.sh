@@ -13,4 +13,8 @@ echo "=========================================="
 echo " Barracuda Camera Workspace Ready! "
 echo "=========================================="
 
-exec "$@"
+if [ -z "${NO_LAUNCH}" ]; then
+    exec ros2 launch barracuda_camera camera.launch.py
+else
+    exec "$@"
+fi
